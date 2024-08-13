@@ -93,6 +93,16 @@ public class BinomialCoefficient {
     return dp[k];
 }
 
+//using for loop without recursion
+public static int bin6(int n, int k) {
+    int res = 1;
+    for(int i = 1; i <= k; i++) {
+        res = res * (n - i + 1) / i;
+    }
+    return res;
+ }
+
+
 
 
 
@@ -112,5 +122,6 @@ public class BinomialCoefficient {
       System.out.println("C(" + n + ", " + k + ") = " + bin4(n, k));
       System.out.println("C(" + n + ", " + k + ") = " + bin5(n, k));
       System.out.println("C(" + n + ", " + k + ") = " + bin_sparse(n, k));
+      System.out.println("C(" + n + ", " + k + ") = " + bin6(n, k));
   }
 }
