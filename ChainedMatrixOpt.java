@@ -43,7 +43,7 @@ public class ChainedMatrixOpt {
     
             System.out.println("matrix p is");
     
-            for(int i=0;i<n;i++) {
+            for(int i=0;i<n-1;i++) {
                 for(int j=0;j<n-i-1;j++){
                     System.out.print(p[i][j]+ " ");
     
@@ -52,7 +52,7 @@ public class ChainedMatrixOpt {
             }
             //order(0,2,p,n);
             System.out.println();
-            return M[1][n];
+            return M[0][n-1];
         } 
         
         public static void main(String[]args){
@@ -63,7 +63,7 @@ public class ChainedMatrixOpt {
             d[2]=3;
             d[3]=4;
             d[4]=6;
-            int p[][]=new int[n+1][];
+            int p[][]=new int[n][];
             for(int i=0;i<n;i++){
                 p[i]=new int[n-1-i];
             }
