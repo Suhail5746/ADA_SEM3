@@ -19,9 +19,8 @@ class ChainedMatrix{
         for(int d=1;d<n;d++){
             for(int i=1;i<=n-d;i++){
                 int j=i+d;
-                M[i][j] =  M[i][i] + M[i+1][j] + O[i-1]*O[i]*O[j];
-                p[i][j]=i;
-                for(int k=i+1;k<j;k++){
+                M[i][j]=Integer.MAX_VALUE;
+                for(int k=i;k<j;k++){
                     int q = M[i][k] + M[k+1][j] + O[i-1]*O[k]*O[j];
                     if(q < M[i][j]){
                         M[i][j] = q;
