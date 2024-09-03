@@ -16,12 +16,32 @@ public class Lcs {
           return dp[i][j];
         
         if(s1.charAt(i-1)==s2.charAt(j-1))
-          dp[i][j]=lcs_dp(s1,s2,i-1,j-1,dp)+1;
+          return dp[i][j]=lcs_dp(s1,s2,i-1,j-1,dp)+1;
         else
-           dp[i][j]=Math.max(lcs_dp(s1,s2,i,j-1,dp),lcs_dp(s1,s2,i-1,j,dp));
-        return dp[s1.length()][s2.length()];
+           return dp[i][j]=Math.max(lcs_dp(s1,s2,i,j-1,dp),lcs_dp(s1,s2,i-1,j,dp));
+        
         
     }
+
+    //print lcs
+    static void print_lcs(String s1,String s2,int i,int j,int[][] dp){
+      if(i==0 || j==0)
+      return ;
+      if(s1.charAt(i-1)==s2.charAt(j-1)){
+        System.out.print(s1.charAt(i-1)+" ");
+        print_lcs(s1,s2,i-1,j-1,dp);
+      }
+      else if(dp[i][j-1]>dp[i-1][j])
+      {
+        print_lcs(s1,s2,i,j-1,dp);
+      }
+      else
+      {
+        print_lcs(s1,s2,i-1,j,dp);
+      }
+    }
+
+        
         
     
         
@@ -34,5 +54,7 @@ public class Lcs {
         int[][] dp = new int[m+1][n+1];
         System.out.println("Length of lcs_recur is " + lcs_recur(s1, s2, m,n));
         System.out.println("Length of lcs_dp is " + lcs_dp(s1, s2,m,n,dp));
+        System.out.println("LCS is ");
+        print_lcs(s1,s2,m,n,dp);
     }
 }
