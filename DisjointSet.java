@@ -1,52 +1,53 @@
+
+import java.util.Arrays;
+
+
+
 public class DisjointSet {
-    private int[] parent;
-    private int[] rank;
-    private int numSets;
+    private int[] U;
+    int n;
 
-    public DisjointSet(int n) {
-        parent = new int[n];
-        rank = new int[n];
-        numSets = 0;
-    }
-
-    public void makeSet(int x) {
-        if (x < 0 || x >= parent.length) {
-            throw new IndexOutOfBoundsException();
+    public DisjointSet(int []V) {
+        n=V.length;
+        U=V;
+        for(int i=0;i<n;i++){
+            U[i]=i;
         }
-        if (parent[x] == 0) {
-            parent[x] = x;
-            rank[x] = 0;
-            numSets++;
-        }
+        
     }
 
     public int find(int x) {
-        if (x < 0 || x >= parent.length) {
-            throw new IndexOutOfBoundsException();
-        }
-        if (parent[x] != x) {
-            parent[x] = find(parent[x]);
-        }
-        return parent[x];
+        int i=x;
+        while(U[i]!=i){
+            i=U[i];
+       }
+       return i;
     }
 
     public void merge(int p, int q) {
-        int rootP = find(p);
-        int rootQ = find(q);
-        if (rootP != rootQ) {
-            if (rank[rootP] < rank[rootQ]) {
-                parent[rootP] = rootQ;
-            } else if (rank[rootP] > rank[rootQ]) {
-                parent[rootQ] = rootP;
-            } else {
-                parent[rootQ] = rootP;
-                rank[rootP]++;
-            }
-            numSets--;
+        if(q>p){
+            U[q]=p;
         }
+        else
+         U[p]=q;
     }
 
     public boolean equal(int p, int q) {
-        return find(p) == find(q);
+        return p == q;
+    }
+
+    public static void main(String[] args) {
+        int[] V = {0,1, 2, 3, 4, 5,6,7,8,9};
+        DisjointSet ds = new DisjointSet(V);
+        
+        
+        ds.merge(0, 4);
+        ds.merge(2,7);
+        ds.merge(3,9);
+        ds.merge(2,5);
+        ds.merge(3,6);
+        System.out.println(Arrays.toString(V));
+
+        
     }
 }
