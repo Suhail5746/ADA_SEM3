@@ -20,8 +20,8 @@ public class Lcs {
         if(s1.charAt(i-1)==s2.charAt(j-1))
           return dp[i][j]=lcs_dp(s1,s2,i-1,j-1,dp)+1;
         else
-           dp[i][j]=Math.max(lcs_dp(s1,s2,i,j-1,dp),lcs_dp(s1,s2,i-1,j,dp));
-        return dp[s1.length()][s2.length()];
+           return dp[i][j]=Math.max(lcs_dp(s1,s2,i,j-1,dp),lcs_dp(s1,s2,i-1,j,dp));
+        
         
     }
 
