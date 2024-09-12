@@ -1,6 +1,6 @@
 
-import java.beans.PropertyDescriptor;
-import javax.management.RuntimeErrorException;
+import java.util.*;
+import org.w3c.dom.ls.LSException;
 
 class Node {
 
@@ -82,6 +82,7 @@ class MinHeap {
 }
 
 public class Huffman {
+    static Map<String, Character> mp=new HashMap<>();
 
     static void inorder(Node root){
        if(root==null)
@@ -101,19 +102,51 @@ public class Huffman {
 
     }
 
+    static void generatecode(Node root ,String s){
+        if(root == null)
+        return;
+        if(root.left ==null && root.right==null){
+           System.out.print(root.symbol+ "  ");
+           System.out.println(s);
+           mp.put(s,root.symbol);
+        }
+        generatecode(root.left, s+"0");
+        generatecode(root.right, s+"1");
+    }
+//method for encoding
+   static String encode(String s) {
+        String code="";
+        for (int i = 0; i < s.length(); i++) {
+            code += mp.get(s.charAt(i));
+        }
+        return code;
+
+   }
+
+   static String decode(String s){
+        String res="";
+        for(int i=0;i<s.length();i++){
+            String t=s.charAt(i)+"";
+            if(mp.containsKey(t)){
+                
+
+        }
+
+   }
+    
+
+
     public static void main(String[] args) {
-        char symbol[] = {'a', 'b', 'c'};
-        int freq[] = {7, 2, 3};
+        char symbol[] = {'a', 'b', 'c','d','e','f'};
+        int freq[] = {16,5,12,17,10,25};
         int n=freq.length;
-        MinHeap t = new MinHeap(3);
+        MinHeap t = new MinHeap(n);
         for (int i = 0; i < n; i++) {
             t.insert(new Node(freq[i], symbol[i]));
         }
         for(int i=1;i<n;i++){
             Node p=t.delMin();
             Node q=t.delMin();
-            System.out.println(p.freq+"testing");
-            System.out.println(q.freq +"testing");
             Node r=new Node(p.freq+q.freq,'$');
             r.left=p;
             r.right=q;
@@ -125,6 +158,13 @@ public class Huffman {
 
         System.out.println("preorder ");
         preorder(t.a[0]);
+        
+        System.out.println();
+        generatecode(t.a[0], "");
+
+        String res=encode("cab");
+        System.out.println(res);
+        decode(res);
 
     }
 }
