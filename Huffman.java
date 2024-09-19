@@ -1,9 +1,6 @@
-
 import java.util.*;
-import org.w3c.dom.ls.LSException;
 
 class Node {
-
     int freq;
     char symbol;
     Node left, right;
@@ -24,7 +21,6 @@ class Node {
 }
 
 class MinHeap {
-
     Node a[];
     int size;
 
@@ -45,7 +41,7 @@ class MinHeap {
 
     Node delMin() {
         if (size == 0) {
-            throw new RuntimeException("heap tree is empty");
+            throw new RuntimeException("Heap is empty");
         }
         Node x = a[0];
         a[0] = a[size - 1];
@@ -64,12 +60,11 @@ class MinHeap {
             if (x.freq <= a[j].freq) {
                 break;
             }
-
-            a[(j - 1) / 2] = a[j];
-            j = 2 * j + 1;
+            a[i] = a[j];
+            i = j;
+            j = 2 * i + 1;
         }
-        a[(j - 1) / 2] = x;
-
+        a[i] = x;
     }
 
     void display() {
@@ -77,94 +72,103 @@ class MinHeap {
             System.out.println(a[i].freq + " " + a[i].symbol + " ");
         }
     }
-
-    
 }
 
 public class Huffman {
-    static Map<String, Character> mp=new HashMap<>();
+    // For encoding (character -> code)
+    static Map<Character, String> encodingMap = new HashMap<>();
+    
+    // For decoding (code -> character)
+    static Map<String, Character> decodingMap = new HashMap<>();
 
-    static void inorder(Node root){
-       if(root==null)
-         return;
-       inorder(root.left);
-       System.out.print(root.freq+" ");
-       inorder(root.right);
+    // Inorder traversal (for debugging purposes)
+    static void inorder(Node root) {
+        if (root == null)
+            return;
+        inorder(root.left);
+        System.out.print(root.freq + " ");
+        inorder(root.right);
     }
 
-    //Preorder
-    static void preorder(Node root){
-        if(root ==null)
-          return;
-        System.out.print(root.freq+" ");
+    // Preorder traversal (for debugging purposes)
+    static void preorder(Node root) {
+        if (root == null)
+            return;
+        System.out.print(root.freq + " ");
         preorder(root.left);
         preorder(root.right);
-
     }
 
-    static void generatecode(Node root ,String s){
-        if(root == null)
-        return;
-        if(root.left ==null && root.right==null){
-           System.out.print(root.symbol+ "  ");
-           System.out.println(s);
-           mp.put(s,root.symbol);
+    // Generate Huffman code recursively
+    static void generatecode(Node root, String s) {
+        if (root == null)
+            return;
+        if (root.left == null && root.right == null) {
+            System.out.println(root.symbol + "  " + s);
+            encodingMap.put(root.symbol, s);
+            decodingMap.put(s, root.symbol);
         }
-        generatecode(root.left, s+"0");
-        generatecode(root.right, s+"1");
+        generatecode(root.left, s + "0");
+        generatecode(root.right, s + "1");
     }
-//method for encoding
-   static String encode(String s) {
-        String code="";
+
+    // Method for encoding
+    static String encode(String s) {
+        StringBuilder code = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
-            code += mp.get(s.charAt(i));
+            code.append(encodingMap.get(s.charAt(i)));
         }
-        return code;
+        return code.toString();
+    }
 
-   }
-
-   static String decode(String s){
-        String res="";
-        for(int i=0;i<s.length();i++){
-            String t=s.charAt(i)+"";
-            if(mp.containsKey(t)){
-                
-
+    // Method for decoding
+    static String decode(String s) {
+        String res = "";
+        String t = "";
+        for (int i = 0; i < s.length(); i++) {
+            t += s.charAt(i);
+            if (decodingMap.containsKey(t)) {
+                res += decodingMap.get(t);
+                t = "";
+            }
         }
-
-   }
-    
-
+        return res;
+    }
 
     public static void main(String[] args) {
-        char symbol[] = {'a', 'b', 'c','d','e','f'};
-        int freq[] = {16,5,12,17,10,25};
-        int n=freq.length;
+        char symbol[] = { 'a', 'b', 'c', 'd', 'e', 'f' };
+        int freq[] = { 16, 5, 12, 17, 10, 25 };
+        int n = freq.length;
+        
+        // Build the MinHeap and Huffman Tree
         MinHeap t = new MinHeap(n);
         for (int i = 0; i < n; i++) {
             t.insert(new Node(freq[i], symbol[i]));
         }
-        for(int i=1;i<n;i++){
-            Node p=t.delMin();
-            Node q=t.delMin();
-            Node r=new Node(p.freq+q.freq,'$');
-            r.left=p;
-            r.right=q;
+        for (int i = 1; i < n; i++) {
+            Node p = t.delMin();
+            Node q = t.delMin();
+            Node r = new Node(p.freq + q.freq, '$');
+            r.left = p;
+            r.right = q;
             t.insert(r);
         }
-        System.out.println("inorder ");
-        inorder(t.a[0]);
-        System.out.println();
 
-        System.out.println("preorder ");
+        // Inorder and Preorder traversal
+        System.out.println("Inorder:");
+        inorder(t.a[0]);
+        System.out.println("\nPreorder:");
         preorder(t.a[0]);
-        
-        System.out.println();
+
+        // Generate Huffman codes
         generatecode(t.a[0], "");
 
-        String res=encode("cab");
-        System.out.println(res);
-        decode(res);
+        // Example encoding and decoding
+        String input = "cab";
+        String encoded = encode(input);
+        System.out.println("\nEncoded string: " + encoded);
 
+        String decoded = decode(encoded);
+        System.out.println("Decoded string: " + decoded);
     }
 }
