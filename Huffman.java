@@ -77,9 +77,6 @@ class MinHeap {
 public class Huffman {
     // For encoding (character -> code)
     static Map<Character, String> encodingMap = new HashMap<>();
-    
-    // For decoding (code -> character)
-    static Map<String, Character> decodingMap = new HashMap<>();
 
     // Inorder traversal (for debugging purposes)
     static void inorder(Node root) {
@@ -106,7 +103,6 @@ public class Huffman {
         if (root.left == null && root.right == null) {
             System.out.println(root.symbol + "  " + s);
             encodingMap.put(root.symbol, s);
-            decodingMap.put(s, root.symbol);
         }
         generatecode(root.left, s + "0");
         generatecode(root.right, s + "1");
@@ -121,18 +117,23 @@ public class Huffman {
         return code.toString();
     }
 
-    // Method for decoding
-    static String decode(String s) {
-        String res = "";
-        String t = "";
+    // Method for decoding using the encodingMap and tree traversal
+    static String decode(String s, Node root) {
+        StringBuilder res = new StringBuilder();
+        Node current = root;
         for (int i = 0; i < s.length(); i++) {
-            t += s.charAt(i);
-            if (decodingMap.containsKey(t)) {
-                res += decodingMap.get(t);
-                t = "";
+            if (s.charAt(i) == '0') {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
+
+            if (current.left == null && current.right == null) {
+                res.append(current.symbol);
+                current = root;
             }
         }
-        return res;
+        return res.toString();
     }
 
     public static void main(String[] args) {
@@ -168,7 +169,7 @@ public class Huffman {
         String encoded = encode(input);
         System.out.println("\nEncoded string: " + encoded);
 
-        String decoded = decode(encoded);
+        String decoded = decode(encoded, t.a[0]);
         System.out.println("Decoded string: " + decoded);
     }
 }
